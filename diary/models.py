@@ -9,3 +9,6 @@ class Diary(models.Model):
 
     def __str__(self):
         return f'[{self.created_at}] {self.title}'
+
+    def get_absolute_urls(self):
+        return f'/diary/{self.pk}/'
