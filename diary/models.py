@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 class Diary(models.Model):
     title = models.CharField(max_length=100)
@@ -13,3 +14,6 @@ class Diary(models.Model):
 
     def get_absolute_urls(self):
         return f'/diary/{self.pk}/'
+
+    def today(self):
+        return datetime.today()

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Diary
 
 class Diarylist(ListView):
@@ -9,8 +9,13 @@ class Diarylist(ListView):
 class DiaryDetail(DetailView):
     model = Diary
 
-class DairyUpdate(UpdateView):
+class DiaryCreate(CreateView):
     model = Diary
     fields = ['title', 'content', 'head_image']
 
-    template_name = 'blog/diary_update_form.html'
+
+# def write_diary(request):
+#     return render(
+#         request,
+#         'diary/write_diary2.html'
+#     )

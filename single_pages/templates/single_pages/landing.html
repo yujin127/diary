@@ -23,7 +23,7 @@
                 {% for diary in recent_diary %}
                     <div class="card mt-1">
                         <div class="card-body">
-                            <h6><a href="{{ post.get_absolute_urls }}" class="text-decoration-none text dark"
+                            <h6><a href="{{ diary.get_absolute_urls }}" class="text-decoration-none text dark"
                             >{{ diary.title }}</a></h6>
                             <span class="badge badge-pill badge-light float-right">
                                 {{ diary.created_at }}
