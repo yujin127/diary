@@ -1,9 +1,14 @@
 from django.shortcuts import render
+from diary.models import Diary
 
 def landing(request):
+    recent_diary = Diary.objects.order_by('-pk')[:3]
     return render(
         request,
-        'single_pages/landing.html'
+        'single_pages/landing.html',
+        {
+            'recent_diary': recent_diary,
+        }
     )
 
 def about_me(request):
