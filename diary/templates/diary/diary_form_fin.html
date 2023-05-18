@@ -17,16 +17,20 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="diary_title" class="form-label">제목:</label>
-                <input type="text" class="form-control" id="diary_title" name="diary_title">
+                <input type="text" class="form-control" id="diary_title" name="diary_title"
+                        value="{{ form.title.value }}">
             </div>
             <div class="mb-3">
                 <p>작성일: <span id="current_date"></span></p>
             </div>
             <div class="mb-3">
-                <textarea name="diary_content" rows="10" cols="50" class="form-control"></textarea>
+                <textarea name="diary_content" rows="10" cols="50" class="form-control">
+                    {{ form.content.value }}
+                </textarea>
             </div>
             <div class="mb-3">
-                <input type="file" id="file_input" name="file_input" accept="image/*" multiple style="display: none;">
+                <input type="file" id="file_input" name="file_input" accept="image/*" multiple style="display: none;"
+                value="{{ form.head_image.value }}">
                 <button type="button" id="upload_button" class="btn btn-secondary">이미지 파일 첨부</button>
             </div>
             <div id="file_names"></div>
