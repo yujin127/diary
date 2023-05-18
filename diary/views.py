@@ -6,6 +6,12 @@ class Diarylist(ListView):
     model = Diary
     ordering = '-pk'
 
+def diary_cal(request):
+    return render(
+        request,
+        'diary/diary_list2.html'
+    )
+
 class DiaryDetail(DetailView):
     model = Diary
 
@@ -14,12 +20,6 @@ class DiaryDetail(DetailView):
 #     fields = ['title', 'content', 'head_image']
 
 def write_diary(request):
-    return render(
-        request,
-        'diary/diary_form_fin.html'
-    )
-
-def diary_cal(request):
     return render(
         request,
         'diary/diary_form_fin.html'

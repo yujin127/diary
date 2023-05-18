@@ -28,3 +28,15 @@ def stacked_result(request):
         request,
         'single_pages/stacked_result.html'
     )
+
+def login(request):
+    return render(
+        request,
+        'single_pages/login.html'
+    )
+
+def signup(request):
+    return render(
+        request,
+        'single_pages/signup.html'
+    )
