@@ -9,13 +9,18 @@ class Diarylist(ListView):
 class DiaryDetail(DetailView):
     model = Diary
 
-class DiaryCreate(CreateView):
-    model = Diary
-    fields = ['title', 'content', 'head_image']
+# class DiaryCreate(CreateView):
+#     model = Diary
+#     fields = ['title', 'content', 'head_image']
 
+def write_diary(request):
+    return render(
+        request,
+        'diary/diary_form_fin.html'
+    )
 
-# def write_diary(request):
-#     return render(
-#         request,
-#         'diary/write_diary2.html'
-#     )
+def diary_cal(request):
+    return render(
+        request,
+        'diary/diary_form_fin.html'
+    )
