@@ -14,6 +14,3 @@ class Diary(models.Model):
 
     def get_absolute_urls(self):
         return f'/diary/{self.pk}/'
-
-    def today(self):
-        return datetime.today()

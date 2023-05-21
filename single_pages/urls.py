@@ -7,6 +7,4 @@ urlpatterns = [
     path('', views.landing, name='landing'),
     path('today_result/', views.today_result),
     path('stacked_result/', views.stacked_result),
-    path('login/', views.login, name='login'),
-    path('signup/', views.signup, name='signup')
 ]

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from diary.models import Diary
+from user.models import User
 
 def landing(request):
     recent_diary = Diary.objects.order_by('-pk')[:3]
@@ -29,14 +30,3 @@ def stacked_result(request):
         'single_pages/stacked_result.html'
     )
 
-def login(request):
-    return render(
-        request,
-        'single_pages/login.html'
-    )
-
-def signup(request):
-    return render(
-        request,
-        'single_pages/signup.html'
-    )

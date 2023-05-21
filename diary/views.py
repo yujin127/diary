@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Diary
+from user.models import User
 
 class Diarylist(ListView):
     model = Diary
