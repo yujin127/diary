@@ -24,9 +24,8 @@ from single_pages import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('diary/', include('diary.urls')),
-    path('', include('single_pages.urls')),
-    path('user/', include('user.urls')),
-    path('common/', include('common.urls'))
+    path('home/', include('single_pages.urls')),
+    path('', include('common.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

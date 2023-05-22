@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from diary.models import Diary
-from user.models import User
 
 def landing(request):
     recent_diary = Diary.objects.order_by('-pk')[:3]
