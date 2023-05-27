@@ -5,6 +5,5 @@ app_name = 'single_pages'
 urlpatterns = [
     path('about_me/', views.about_me),
     path('', views.landing, name='landing'),
-    path('today_result/', views.today_result),
-    path('stacked_result/', views.stacked_result),
+
 ]

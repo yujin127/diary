@@ -18,7 +18,8 @@
                 <p>작성일: <span id="current_date"></span></p>
             </div>
             <div class="mb-3">
-                <textarea name="diary_content" rows="10" cols="50" class="form-control">
+                <textarea {% if not user.is_authenticated %} disabled {% endif %}
+                          name="diary_content" rows="10" cols="50" class="form-control">
                     {{ form.content.value }}
                 </textarea>
             </div>

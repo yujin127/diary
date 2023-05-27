@@ -5,6 +5,7 @@
     <div class="row">
       <form method="post" action="{% url 'common:login' %}">
       {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
       {% include 'common/form_errors.html' %}
       <div class="mb-3">
         <label for="username">ID</label>

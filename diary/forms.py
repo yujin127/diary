@@ -4,12 +4,12 @@ from diary.models import Diary
 class WriteDiary(forms.ModelForm):
     class Meta:
         model = Diary
-        fields = ['title', 'content']
+        fields = ['title', 'content','author']
         labels = {
             'title':'제목',
-            'content':'일기'
+            'content':'일기',
+            'author':'작성자'
         }
-
 
 class DiaryForm(forms.ModelForm):
     class Meta:

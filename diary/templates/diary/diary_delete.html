@@ -1,0 +1,23 @@
+{% extends 'diary/base.html' %}
+
+{% block head_title %}
+    Confirm Delete - Diary
+{% endblock %}
+
+{% block main_area %}
+    <div id="delete-area">
+        <h2>Confirm Delete</h2>
+        <p>정말 삭제하시겠습니까?</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete" class="btn btn-danger">
+            <a href="{% url 'diary:diary_detail' diary.id %}" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
+

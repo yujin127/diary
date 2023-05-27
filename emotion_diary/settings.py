@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'single_pages',
     'diary.apps.DiaryConfig',
     'common.apps.CommonConfig',
+    'analysis'
 ]
 
 MIDDLEWARE = [

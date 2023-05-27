@@ -19,13 +19,13 @@ from django.urls import path, include
 
 from django.conf import settings
 from django.conf.urls.static import static
-from single_pages import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('diary/', include('diary.urls')),
     path('home/', include('single_pages.urls')),
-    path('', include('common.urls'))
+    path('', include('common.urls')),
+    path('analysis/', include('analysis.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
