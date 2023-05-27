@@ -79,8 +79,7 @@ def predict(predict_sentence, model):
 if __name__=="__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     PATH = '../stat_model/'
-    model = torch.load(PATH + 'BestModel.pt', map_location=device)
-    print(type(model))  # 전체 모델을 통째로 불러옴, 클래스 선언 필수
+    model = BERTClassifier()
     model.load_state_dict(
         torch.load(PATH + 'BestModel_state_dict.pt', map_location=device))  # state_dict를 불러 온 후, 모델에 저장
 

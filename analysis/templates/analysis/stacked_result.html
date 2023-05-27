@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Stacked Result</title>
-    <link href="{% static 'diary/bootstrap/bootstrap.min.css' %}" rel="stylesheet" media="screen">
-    <script src="https://kit.fontawesome.com/9cab486a7f.js" crossorigin="anonymous"></script>
-</head>
-<body>
-{% include 'diary/navbar.html' %}
+{% extends 'diary/base.html' %}
+
+{% block main_area %}
     <h1>누적 분석 결과 시각화</h1>
-</body>
-</html>
+{% endblock %}

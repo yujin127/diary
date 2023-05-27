@@ -1,13 +1,13 @@
 {% extends 'diary/base.html' %}
 
 {% block main_area %}
-    <div class="row">
-        <h1>Diary List</h1>
-    </div>
+<div style="margin-right:300px;">
+    <h1>Diary List</h1>
+</div>
     {% if diary_list.exists %}
     {% for p in diary_list %}
     <!-- Blog post-->
-    <div class="row card mb-4">
+    <div class="card mb-8" style="margin-bottom: 20px;">
         {% if p.head_image %}
             <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head_image"/>
         {% else %}
@@ -22,6 +22,7 @@
             <a class="btn btn-primary" href="{{ p.get_absolute_urls }}">Read more &rarr;</a>
         </div>
     </div>
+
     {% endfor %}
     {% else %}
     <h3>아직 게시물이 없습니다.</h3>

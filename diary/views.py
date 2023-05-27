@@ -32,7 +32,7 @@ def write_diary(request):
             diary = form.save(commit=False)
             diary.create_date = timezone.now()
             diary.save()
-            return redirect('/home/today_result/')
+            return redirect('/analysis/today_result/')
     else:
         form = WriteDiary()
     context = {'form':form}
@@ -48,7 +48,7 @@ def diary_save(request):
         diary.author = request.user
 
         diary.save()
-    return redirect('/home/')
+    return redirect('/')
 
 # @login_required(login_url='common:login')
 # def diary_form(request):
@@ -71,7 +71,7 @@ def diary_form(request):
             diary = form.save(commit=False)
             diary.author = request.user
             diary.save()
-            return redirect('/home/')
+            return redirect('/analysis/today_result/')
     else:
         form = DiaryForm()
     return render(request, 'diary/diary_form.html', {'form':form})
