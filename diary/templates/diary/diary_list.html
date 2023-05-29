@@ -6,6 +6,7 @@
 </div>
     {% if diary_list.exists %}
     {% for p in diary_list %}
+    {% if p.author == request.user %}
     <!-- Blog post-->
     <div class="card mb-8" style="margin-bottom: 20px;">
         {% if p.head_image %}
@@ -22,7 +23,7 @@
             <a class="btn btn-primary" href="{{ p.get_absolute_urls }}">Read more &rarr;</a>
         </div>
     </div>
-
+    {% endif %}
     {% endfor %}
     {% else %}
     <h3>아직 게시물이 없습니다.</h3>

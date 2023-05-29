@@ -10,35 +10,32 @@
 </head>
 <body>
 {% include 'diary/navbar.html' %}
+<div style="padding: 50px;">
+    <h1 class="mt-5">About me</h1><hr>
 
-<section>
-    <div class="container mt-4">
+    <div  style="width:30%; padding:10px; float:left;">
         <div class="row">
-            <div class="col-lg8">
-                <h1 class="mt-5">About me</h1>
-                <h3>이름 : </h3>
-            </div>
-            <div class="col-lg-4">
-                <img class="img-fluid" src="{% static 'single_pages/images/rabbit.jpeg' %}">
+            <div class="col-lg8" style="padding-right:30px;">
+                    <img class="img-fluid" src="{% static 'single_pages/images/rabbit.jpeg' %}" height="300px;">
             </div>
         </div>
     </div>
-</section>
-
-<section class="bg-light margin-for-footer">
-    <div class="container">
+    {% if user.is_authenticated %}
+    <div style="width:30%; padding:10px; float:left;">
         <div class="row">
             <div class="col-12">
-                <h4>생년월일 : </h4>
-                <h4>학교 : </h4>
-                <h4>전화번호 : </h4>
-                <h4>주소 : </h4>
-                <h4>MBTI : </h4>
-                <h4>취미 : </h4>
+                <h4>이름 : {{ user.username }}</h4>
+                <h4>생년월일 : {{ user.profile.birthday }}</h4>
+                <h4>학교 : {{ user.profile.school }}</h4>
+                <h4>전화번호 : {{ user.profile.phone_number }}</h4>
+                <h4>주소 : {{ user.profile.address }}</h4>
+                <h4>MBTI : {{ user.profile.mbti }}</h4>
+                <h4>취미 : {{ user.profile.hobby }}</h4>
             </div>
         </div>
     </div>
-</section>
+    {% endif %}
+</div>
 <div class="fixed-bottom">
     {% include 'diary/footer.html' %}
 </div>

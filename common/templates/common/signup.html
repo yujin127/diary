@@ -31,6 +31,36 @@
         <input type="text" class="form-control" name="name" id="name"
                 value="{{ form.name.value|default_if_none:'' }}">
       </div>
+      <div class="mb-3">
+        <label for="name">Birthday</label>
+        <input type="text" class="form-control" name="birthday" id="birthday"
+                value="{{ form.birthday.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="name">School</label>
+        <input type="text" class="form-control" name="school" id="school"
+                value="{{ form.school.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="name">Phone Number</label>
+        <input type="text" class="form-control" name="phone_number" id="phone_number"
+                value="{{ form.phone_number.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="name">Address</label>
+        <input type="text" class="form-control" name="address" id="address"
+                value="{{ form.address.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="name">MBTI</label>
+        <input type="text" class="form-control" name="mbti" id="mbti"
+                value="{{ form.mbti.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="name">Hobby</label>
+        <input type="text" class="form-control" name="hobby" id="hobby"
+                value="{{ form.hobby.value|default_if_none:'' }}">
+      </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
       </form>
     </div>

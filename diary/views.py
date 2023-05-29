@@ -8,11 +8,18 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
 class DiaryList(ListView):
     model = Diary
     ordering = '-pk'
+
+    def get_queryset(self):
+        # Get the queryset of diaries for the logged-in user
+        queryset = super().get_queryset()
+        queryset = queryset.filter(author=self.request.user)
+        return queryset
 
 
 def diary_cal(request):

@@ -12,10 +12,14 @@ def landing(request):
         }
     )
 
+# @login_required(login_url='common:login')
+# def about_me(request):
+#     return render(
+#         request,
+#         'single_pages/about_me.html', {'request':request}
+#     )
+
 @login_required(login_url='common:login')
 def about_me(request):
-    return render(
-        request,
-        'single_pages/about_me.html'
-    )
-
+    user = request.user
+    return render(request, 'single_pages/about_me.html', {'user': user})
