@@ -1,5 +1,13 @@
 {% extends 'diary/base.html' %}
 
 {% block main_area %}
+<head>
     <h1>오늘 분석 결과 시각화</h1>
+</head>
+<body>
+    <p>분석 결과 : {{ result }}</p>
+    {% load static %}
+    <img src="{% static 'image/radar_chart.jpg' %}" alt="Radar Chart">
+</body>
+
 {% endblock %}

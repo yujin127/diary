@@ -6,7 +6,7 @@ class UserForm(UserCreationForm):
     email = forms.EmailField(label='email')
     name = forms.CharField(max_length=16, label='name')
 
-    birthday = forms.DateTimeField(label='birthday')
+    birthday = forms.DateField(label='birthday')
     school = forms.CharField(max_length=32, label='school')
     phone_number = forms.IntegerField(label='phone_number')
     address = forms.CharField(label='address')
