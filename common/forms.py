@@ -6,14 +6,13 @@ class UserForm(UserCreationForm):
     email = forms.EmailField(label='email')
     name = forms.CharField(max_length=16, label='name')
 
-    birthday = forms.DateField(label='birthday')
-    school = forms.CharField(max_length=32, label='school')
-    phone_number = forms.IntegerField(label='phone_number')
-    address = forms.CharField(label='address')
-    mbti = forms.CharField(max_length=4, min_length=4, label='mbti')
-    hobby = forms.CharField(label='hobby')
-
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'email', 'name', 'birthday',
-                  'school', 'phone_number', 'address', 'mbti', 'hobby')
+        fields = ('username', 'password1', 'password2', 'email', 'name')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data['name']  # Save the name value to the first_name field
+        if commit:
+            user.save()
+        return user

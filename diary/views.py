@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
 class DiaryList(ListView):
@@ -21,7 +22,6 @@ class DiaryList(ListView):
         queryset = queryset.filter(author=self.request.user)
         return queryset
 
-
 def diary_cal(request):
     return render(
         request,
@@ -32,47 +32,17 @@ def diary_cal(request):
 class DiaryDetail(DetailView):
     model = Diary
 
-def write_diary(request):
-    if request.method == 'POST':
-        form = WriteDiary(request.POST)
-        if form.is_valid():
-            diary = form.save(commit=False)
-            diary.create_date = timezone.now()
-            diary.save()
-            return redirect('/analysis/today_result/')
-    else:
-        form = WriteDiary()
-    context = {'form':form}
-    return render(request, 'diary/diary_form_fin.html', context)
-
-def diary_save(request):
-    if request.method == 'POST':
-        diary = Diary()
-
-        diary.title = request.POST['title']
-        diary.content = request.POST['content']
-        diary.created_at = timezone.now()
-        diary.author = request.user
-
-        diary.save()
-    return redirect('/')
-
-# @login_required(login_url='common:login')
-# def diary_form(request):
-#     if request.method == 'POST' or request.method == 'FILES':
-#         form = DiaryForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             form.author = request.user
-#             return redirect('/home/')
-#     else:
-#         form = DiaryForm()
-#     return render(request, 'diary/diary_form.html', {'form':form})
-
 
 @login_required(login_url='common:login')
 def diary_form(request):
-    if request.method == 'POST' or request.method == 'FILES':
+    today = timezone.now().date()
+    existing_diary = Diary.objects.filter(author=request.user, created_at=today).first()
+
+    if existing_diary:
+        messages.info(request, '하루에 하나의 일기만 작성할 수 있습니다.')
+        return redirect('diary:diary_detail', pk=existing_diary.pk)
+
+    if request.method == 'POST':
         form = DiaryForm(request.POST, request.FILES)
         if form.is_valid():
             diary = form.save(commit=False)
@@ -81,7 +51,8 @@ def diary_form(request):
             return redirect('/analysis/today_result/')
     else:
         form = DiaryForm()
-    return render(request, 'diary/diary_form.html', {'form':form})
+
+    return render(request, 'diary/diary_form.html', {'form': form})
 
 def diary_update(request, diary_id):
     diary = get_object_or_404(Diary, pk=diary_id)
@@ -98,16 +69,6 @@ def diary_update(request, diary_id):
     else:
         form = DiaryForm(instance=diary)
     return render(request, 'diary/diary_form.html', {'form':form})
-
-# def diary_delete(request, diary_id):
-#     diary = get_object_or_404(Diary, pk=diary_id)
-#     if request.user != diary.author:
-#         messages.error(request, '삭제권한이 없습니다')
-#         return redirect('diary:diary_detail', diary_id=diary.id)
-#     if request.method == "POST":
-#         diary.delete()
-#         return redirect('diary:diary_list')
-#     return render(request, 'diary/diary_delete.html', {'diary': diary})
 
 class DiaryDelete(DeleteView):
     model = Diary

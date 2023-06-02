@@ -10,7 +10,6 @@ from analysis.stat_model.MyBert import BERTDataset, BERTClassifier
 from diary.models import Diary
 import datetime
 
-
 # 파라미터 정립
 max_len = 128
 batch_size = 10
@@ -89,14 +88,25 @@ def predict_main():
     model.to(device)
     model.eval()
 
-    diary = Diary.objects.get(created_at=datetime.datetime.today().date())
+    try:
+        diary = Diary.objects.filter(created_at=datetime.datetime.now().date()).order_by('-created_at')[0]
+    except (Diary.DoesNotExist, IndexError):
+        diary = None
+    if diary is None:
+        diary = Diary.objects.latest('created_at')
+
+
     sentences = diary.content
     d_l = sentences.split('.')
+
     total_emotion = []
     for i in range(len(d_l)):
         total_emotion.append(predict(d_l[i], model, tokenizer, vocab))
-    return total_emotion
 
+    diary.emotion_data = total_emotion
+    diary.save()
+
+    return total_emotion
 
 def make_df(total_emotion):
     sad = total_emotion.count(['슬픔이'])
@@ -113,4 +123,5 @@ def make_df(total_emotion):
     emotion_df = pd.DataFrame({'sad': sad, 'neutral':neutral, 'insecure': insecure,
                                'embarrassing': embarrassing, 'angry': angry, 'joy':joy, 'hate':hate,
                                'hurt':hurt, 'happy': happy, 'surprise':surprise, 'fear':fear,}, index=[0])
+
     return emotion_df

@@ -2,12 +2,25 @@
 
 {% block main_area %}
 <head>
-    <h1>오늘 분석 결과 시각화</h1>
+    <style>
+        .analysis-title {
+            text-align: center;
+        }
+        .chart-container {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <p>분석 결과 : {{ result }}</p>
-    {% load static %}
-    <img src="{% static 'image/radar_chart.jpg' %}" alt="Radar Chart">
+    <div class="analysis-title">
+        <h1>오늘 분석 결과 시각화</h1>
+    </div>
+    <hr>
+    <div class="chart-container">
+        <p>분석결과 : {{ result }}</p>
+        {% load static %}
+        <img src="{% static 'image/'|add:image_name %}" alt="Radar Chart">
+    </div>
 </body>
 
 {% endblock %}
