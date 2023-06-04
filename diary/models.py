@@ -14,6 +14,7 @@ class Diary(models.Model):
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     emotion_data = models.TextField(null=True, blank=True)
+    radar_chart = models.ImageField(null=True, blank=True, upload_to='analysis/images/radar_chart/')
 
     def __str__(self):
         return f'[{self.created_at}] {self.title}'

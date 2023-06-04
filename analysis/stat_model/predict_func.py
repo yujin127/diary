@@ -71,7 +71,7 @@ def predict(predict_sentence, model, tokenizer, vocab):
 
             return test_eval
 
-def predict_main():
+def predict_main(author_id):
     PATH = 'analysis/stat_model/'
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -89,11 +89,13 @@ def predict_main():
     model.eval()
 
     try:
-        diary = Diary.objects.filter(created_at=datetime.datetime.now().date()).order_by('-created_at')[0]
+        diary = \
+            Diary.objects.filter(author_id=author_id, created_at=datetime.datetime.now().date()).order_by(
+                '-created_at')[0]
     except (Diary.DoesNotExist, IndexError):
         diary = None
     if diary is None:
-        diary = Diary.objects.latest('created_at')
+        diary = Diary.objects.filter(author_id=author_id).latest('created_at')
 
 
     sentences = diary.content
@@ -120,8 +122,8 @@ def make_df(total_emotion):
     happy = total_emotion.count(['행복이'])
     surprise = total_emotion.count(['놀람이'])
     fear = total_emotion.count(['공포가'])
-    emotion_df = pd.DataFrame({'sad': sad, 'neutral':neutral, 'insecure': insecure,
-                               'embarrassing': embarrassing, 'angry': angry, 'joy':joy, 'hate':hate,
-                               'hurt':hurt, 'happy': happy, 'surprise':surprise, 'fear':fear,}, index=[0])
+    emotion_df = pd.DataFrame({'슬픔': sad, '중립':neutral, '불안': insecure,
+                               '당황': embarrassing, '분노': angry, '기쁨':joy, '혐오':hate,
+                               '상처':hurt, '행복': happy, '놀람':surprise, '공포':fear,}, index=[0])
 
     return emotion_df

@@ -12,14 +12,17 @@
     </style>
 </head>
 <body>
-    <div class="analysis-title">
+    <div class="row analysis-title">
         <h1>오늘 분석 결과 시각화</h1>
     </div>
     <hr>
-    <div class="chart-container">
-        <p>분석결과 : {{ result }}</p>
+    <div class="row">
+        <p>분석 결과 : </p>
+    </div>
+    <div class="row chart-container">
         {% load static %}
-        <img src="{% static 'image/'|add:image_name %}" alt="Radar Chart">
+        <img src="{% static 'image/'|add:radar_image_name %}" alt="Radar Chart">
+        <img src="{% static 'image/'|add:pie_image_name %}" alt="Pie Chart">
     </div>
 </body>
 

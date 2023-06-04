@@ -32,7 +32,6 @@ def diary_cal(request):
 class DiaryDetail(DetailView):
     model = Diary
 
-
 @login_required(login_url='common:login')
 def diary_form(request):
     today = timezone.now().date()
