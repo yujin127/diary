@@ -35,6 +35,22 @@
                 <p>{{ diary.content }}</p>
             </section>
 
+            <div class="row chart-container">
+                {% load static %}
+                <div>
+                    <img src="{% static 'image/' %}{{ radar_image_name }}" alt="Radar Chart"
+                            style="width:500px; height:500px; float:left; margin-right:20px">
+                </div>
+                <div>
+                    <img src="{% static 'image/' %}{{ pie_image_name }}" alt="Pie Chart"
+                            style="width:500px; height:500px; float:left;">
+                </div>
+            </div>
+            <div class="row">
+                <img src="{% static 'image/' %}{{ bar_image_name }}" alt="Bar Chart"
+                        style="width:1000px; height:300px; float:left;">
+            </div>
+
             <div class="my-3">
                 {% if request.user == diary.author %}
                 <a href="{% url 'diary:diary_update' diary.id %}" class="btn btn-sm btn-outline-secondary">

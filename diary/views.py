@@ -9,6 +9,9 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.views.generic import ListView
+from analysis.stat_model.charts import create_bar_chart, create_pie_chart, create_radar_chart
+import os
+import datetime
 
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
@@ -31,7 +34,29 @@ def diary_cal(request):
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
 class DiaryDetail(DetailView):
     model = Diary
+    template_name = 'diary/diary_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        diary = self.get_object()
+        date = diary.created_at
+        today = datetime.date.today()
+
+        radar_image_name = create_radar_chart(diary.author.id, date)
+        radar_image_path = os.path.join('analysis/static/image', radar_image_name)
+        context['radar_image_name'] = radar_image_name
+        context['radar_image_path'] = radar_image_path
+
+        pie_image_name = create_pie_chart(diary.author.id, date)
+        pie_image_path = os.path.join('analysis/static/image', pie_image_name)
+        context['pie_image_name'] = pie_image_name
+        context['pie_image_path'] = pie_image_path
+
+        bar_image_name = create_bar_chart(diary.author.id, date)
+        bar_image_path = os.path.join('analysis/static/image', bar_image_name)
+        context['bar_image_name'] = bar_image_name
+        context['bar_image_path'] = bar_image_path
+        return context
 @login_required(login_url='common:login')
 def diary_form(request):
     today = timezone.now().date()

@@ -29,8 +29,6 @@ def predict(predict_sentence, model, tokenizer, vocab):
 
     model.eval()
 
-    test_eval = []
-
     for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(test_dataloader):
         token_ids = token_ids.long()
         segment_ids = segment_ids.long()
@@ -47,31 +45,31 @@ def predict(predict_sentence, model, tokenizer, vocab):
                 logits = logits.detach().cpu().numpy()
 
                 if np.argmax(logits) == 0:
-                    test_eval.append("슬픔이")
+                    test_eval.append("슬픔")
                 elif np.argmax(logits) == 1:
-                    test_eval.append("중립이")
+                    test_eval.append("중립")
                 elif np.argmax(logits) == 2:
-                    test_eval.append("불안이")
+                    test_eval.append("불안")
                 elif np.argmax(logits) == 3:
-                    test_eval.append("당황이")
+                    test_eval.append("당황")
                 elif np.argmax(logits) == 4:
-                    test_eval.append("분노가")
+                    test_eval.append("분노")
                 elif np.argmax(logits) == 5:
-                    test_eval.append("기쁨이")
+                    test_eval.append("기쁨")
                 elif np.argmax(logits) == 6:
-                    test_eval.append("혐오가")
+                    test_eval.append("혐오")
                 elif np.argmax(logits) == 7:
-                    test_eval.append("상처가")
+                    test_eval.append("상처")
                 elif np.argmax(logits) == 8:
-                    test_eval.append("행복이")
+                    test_eval.append("행복")
                 elif np.argmax(logits) == 9:
-                    test_eval.append("놀람이")
+                    test_eval.append("놀람")
                 else:
-                    test_eval.append("공포가")
+                    test_eval.append("공포")
 
             return test_eval
 
-def predict_main(author_id):
+def predict_main(author_id, date):
     PATH = 'analysis/stat_model/'
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -89,9 +87,7 @@ def predict_main(author_id):
     model.eval()
 
     try:
-        diary = \
-            Diary.objects.filter(author_id=author_id, created_at=datetime.datetime.now().date()).order_by(
-                '-created_at')[0]
+        diary = Diary.objects.filter(author_id=author_id, created_at=date).order_by('-created_at')[0]
     except (Diary.DoesNotExist, IndexError):
         diary = None
     if diary is None:
@@ -102,28 +98,53 @@ def predict_main(author_id):
     d_l = sentences.split('.')
 
     total_emotion = []
-    for i in range(len(d_l)):
-        total_emotion.append(predict(d_l[i], model, tokenizer, vocab))
+    for i in range(len(d_l)-1):
+        # total_emotion.append(predict(d_l[i], model, tokenizer, vocab))
+        emotions = predict(d_l[i], model, tokenizer, vocab)
+        total_emotion.extend(emotions)
 
     diary.emotion_data = total_emotion
     diary.save()
 
     return total_emotion
 
+
 def make_df(total_emotion):
-    sad = total_emotion.count(['슬픔이'])
-    neutral = total_emotion.count(['중립이'])
-    insecure = total_emotion.count(['불안이'])
-    embarrassing = total_emotion.count(['당황이'])
-    angry = total_emotion.count(['분노가'])
-    joy = total_emotion.count(['기쁨이'])
-    hate = total_emotion.count(['혐오가'])
-    hurt = total_emotion.count(['상처가'])
-    happy = total_emotion.count(['행복이'])
-    surprise = total_emotion.count(['놀람이'])
-    fear = total_emotion.count(['공포가'])
+    sad = total_emotion.count('슬픔')
+    neutral = total_emotion.count('중립')
+    insecure = total_emotion.count('불안')
+    embarrassing = total_emotion.count('당황')
+    angry = total_emotion.count('분노')
+    joy = total_emotion.count('기쁨')
+    hate = total_emotion.count('혐오')
+    hurt = total_emotion.count('상처')
+    happy = total_emotion.count('행복')
+    surprise = total_emotion.count('놀람')
+    fear = total_emotion.count('공포')
     emotion_df = pd.DataFrame({'슬픔': sad, '중립':neutral, '불안': insecure,
                                '당황': embarrassing, '분노': angry, '기쁨':joy, '혐오':hate,
                                '상처':hurt, '행복': happy, '놀람':surprise, '공포':fear,}, index=[0])
+    # colors = ['#C0DBEA', '#F9F9F9', '#65647C', '#85586F', '#BB6464', '#FDFDBD',
+    #           '#65647C', '#6096B4', '#FFB4B4', '#CE97B0', '#BBD6B8']
+    # emotion_df.loc[1] = colors
 
     return emotion_df
+
+
+def make_df2(total_emotion):
+    bad = total_emotion.count('슬픔') + total_emotion.count('불안') + total_emotion.count('분노') + \
+          total_emotion.count('혐오') + total_emotion.count('상처') + total_emotion.count('당황') + \
+          total_emotion.count('공포')
+    good = total_emotion.count('기쁨') + total_emotion.count('행복') + total_emotion.count('놀람')
+    neutral = total_emotion.count('중립')
+    total_counts = good + neutral + bad
+
+    good_percent = good / total_counts * 100
+    neutral_percent = neutral / total_counts * 100
+    bad_percent = bad / total_counts * 100
+
+    emotion_df = pd.DataFrame({'긍정': good_percent, '중립': neutral_percent, '부정': bad_percent}, index=[0])
+
+    return emotion_df
+
+

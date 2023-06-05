@@ -17,12 +17,22 @@
     </div>
     <hr>
     <div class="row">
-        <p>분석 결과 : </p>
+        <p>오늘의 일기 : {{ diary.content }}</p>
     </div>
     <div class="row chart-container">
         {% load static %}
-        <img src="{% static 'image/'|add:radar_image_name %}" alt="Radar Chart">
-        <img src="{% static 'image/'|add:pie_image_name %}" alt="Pie Chart">
+        <div>
+            <img src="{% static 'image/'|add:radar_image_name %}" alt="Radar Chart"
+            style="width:500px; height:500px; float:left; margin-right:20px">
+        </div>
+        <div>
+            <img src="{% static 'image/'|add:pie_image_name %}" alt="Pie Chart"
+            style="width:500px; height:500px; float:left;">
+        </div>
+    </div>
+    <div class="row">
+        <img src="{% static 'image/'|add:bar_image_name %}" alt="Bar Chart"
+            style="width:1000px; height:300px; float:left;">
     </div>
 </body>
 
