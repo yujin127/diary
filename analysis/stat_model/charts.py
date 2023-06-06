@@ -1,5 +1,7 @@
 import os
 import datetime
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -10,9 +12,10 @@ from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
 
 from analysis.stat_model.predict_func import predict, predict_main, make_df, make_df2
+from .weekly_result import make_stacked_df, make_good_bad_df
 
 def create_radar_chart(author_id, date):
-    plt.switch_backend('AGG')
+
     emotion = predict_main(author_id, date)
     emotion_df = make_df(emotion)
     emotion_df = emotion_df.loc[:, emotion_df.ne(0).any()]
@@ -56,8 +59,7 @@ def create_pie_chart(author_id, date):
     emotion_df = emotion_df.loc[:, emotion_df.ne(0).any()]
     data = emotion_df.iloc[0]
     x_label = emotion_df.columns
-    colors = ['#C0DBEA', '#F9F9F9', '#65647C', '#85586F', '#BB6464', '#FDFDBD',
-              '#65647C', '#6096B4', '#FFB4B4', '#CE97B0', '#BBD6B8']
+    colors = ['#8FBDD3', '#FAAB78', '#FFD966', '#D77FA1', '#B5F1CC', '#804674']
     plt.figure(figsize=(4, 4))
     plt.pie(data,
             labels=x_label,
@@ -86,18 +88,19 @@ def create_bar_chart(author_id, date):
     emotion_df = emotion_df.loc[:, emotion_df.ne(0).any()]
     labels = emotion_df.columns
 
-    colors = {'긍정': '#0079FF', '중립': '#F9F9F9', '부정': '#BE0000'}
+    colors = {'긍정': '#0079FF', '부정': '#BE0000'}
     color_list = [colors.get(label, '#CCCCCC') for label in labels]
 
     ax = emotion_df.plot(kind='barh', stacked=True, figsize=(10, 3), alpha=0.7, color=color_list)
 
-    legend_labels = ['긍정', '중립', '부정']
+    legend_labels = ['긍정', '부정']
     legend_handles = [plt.Rectangle((0, 0), 1, 1, color=colors[label]) for label in legend_labels]
     ax.legend(legend_handles, legend_labels, loc='upper right')
 
     for i, p in enumerate(ax.patches):
         left, bottom, width, height = p.get_bbox().bounds
-        ax.annotate(f"{int(width)}%", xy=(left + width / 2, bottom + height / 2), ha='center', va='center', fontsize=15)
+        ax.annotate(f"{int(width)}%", xy=(left + width / 2, bottom + height / 2),
+                    ha='center', va='center', fontsize=15)
 
     ax.axis('off')
 

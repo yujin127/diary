@@ -110,20 +110,14 @@ def predict_main(author_id, date):
 
 
 def make_df(total_emotion):
-    sad = total_emotion.count('슬픔')
-    neutral = total_emotion.count('중립')
-    insecure = total_emotion.count('불안')
-    embarrassing = total_emotion.count('당황')
-    angry = total_emotion.count('분노')
+    sad = total_emotion.count('슬픔') + total_emotion.count('불안') + total_emotion.count('당황') + total_emotion.count('상처')
+    angry = total_emotion.count('분노') + total_emotion.count('혐오')
     joy = total_emotion.count('기쁨')
-    hate = total_emotion.count('혐오')
-    hurt = total_emotion.count('상처')
     happy = total_emotion.count('행복')
     surprise = total_emotion.count('놀람')
     fear = total_emotion.count('공포')
-    emotion_df = pd.DataFrame({'슬픔': sad, '중립':neutral, '불안': insecure,
-                               '당황': embarrassing, '분노': angry, '기쁨':joy, '혐오':hate,
-                               '상처':hurt, '행복': happy, '놀람':surprise, '공포':fear,}, index=[0])
+    emotion_df = pd.DataFrame({'슬픔': sad, '분노': angry, '기쁨':joy,
+                               '행복': happy, '놀람':surprise, '공포':fear,}, index=[0])
     # colors = ['#C0DBEA', '#F9F9F9', '#65647C', '#85586F', '#BB6464', '#FDFDBD',
     #           '#65647C', '#6096B4', '#FFB4B4', '#CE97B0', '#BBD6B8']
     # emotion_df.loc[1] = colors
@@ -134,16 +128,14 @@ def make_df(total_emotion):
 def make_df2(total_emotion):
     bad = total_emotion.count('슬픔') + total_emotion.count('불안') + total_emotion.count('분노') + \
           total_emotion.count('혐오') + total_emotion.count('상처') + total_emotion.count('당황') + \
-          total_emotion.count('공포')
-    good = total_emotion.count('기쁨') + total_emotion.count('행복') + total_emotion.count('놀람')
-    neutral = total_emotion.count('중립')
-    total_counts = good + neutral + bad
+          total_emotion.count('공포') + total_emotion.count('놀람')
+    good = total_emotion.count('기쁨') + total_emotion.count('행복')
+    total_counts = good + bad
 
     good_percent = good / total_counts * 100
-    neutral_percent = neutral / total_counts * 100
     bad_percent = bad / total_counts * 100
 
-    emotion_df = pd.DataFrame({'긍정': good_percent, '중립': neutral_percent, '부정': bad_percent}, index=[0])
+    emotion_df = pd.DataFrame({'긍정': good_percent, '부정': bad_percent}, index=[0])
 
     return emotion_df
 

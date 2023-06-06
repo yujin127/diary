@@ -2,5 +2,20 @@
 
 {% block main_area %}
     <h1>누적 분석 결과 시각화</h1>
-    <p>{{ df }}</p>
+<!--    <p>{{ df }}</p>-->
+    <p>{{ df_good_bad }}</p>
+    <p>{{ df_fin }}</p>
+    {% load static %}
+        <div class="row">
+            <img src="{% static 'image/'|add:weekly_line_image_name %}" alt="Weekly Line Chart"
+            style="width:1000px; height:600px; float:left; margin-right:20px">
+        </div>
+        <div class="row">
+            <img src="{% static 'image/'|add:cum_weekly_line_image_name %}" alt="Cum_Weekly Line Chart"
+            style="width:1000px; height:600px; float:left; margin-right:20px">
+        </div>
+        <div class="row">
+            <img src="{% static 'image/'|add:weekly_bar_image_name %}" alt="Weekly Bar Chart"
+            style="width:1000px; height:600px; float:left; margin-right:20px">
+        </div>
 {% endblock %}
