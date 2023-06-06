@@ -12,6 +12,7 @@ from django.views.generic import ListView
 from analysis.stat_model.charts import create_bar_chart, create_pie_chart, create_radar_chart
 import os
 import datetime
+from analysis.stat_model.wordcloud import keyword_list
 
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
@@ -56,6 +57,10 @@ class DiaryDetail(DetailView):
         bar_image_path = os.path.join('analysis/static/image', bar_image_name)
         context['bar_image_name'] = bar_image_name
         context['bar_image_path'] = bar_image_path
+
+        keyword = keyword_list(diary.author.id, date, 3)
+        context['keyword'] = keyword
+
         return context
 @login_required(login_url='common:login')
 def diary_form(request):

@@ -16,14 +16,20 @@
         <h1>오늘 분석 결과 시각화</h1>
     </div>
     <hr>
+    <hr>
     <div class="row">
         <p>오늘의 일기 : {{ diary.content }}</p>
-        <ul>
-        {% for keyword in keywords %}
-            <li>{{ keyword.0 }} ({{ keyword.1 }})</li>
-        {% endfor %}
-        </ul>
     </div>
+    <div class="row">
+        {% if keywords|length == 0 %}
+            <p>No keywords found.</p>
+        {% else %}
+            <p>Keywords: {{ keywords }}</p>
+        {% endif %}
+    </div>
+    <hr>
+    <hr>
+    <hr>
     <div class="row chart-container">
         {% load static %}
         <div>

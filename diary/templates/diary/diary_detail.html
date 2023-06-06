@@ -33,6 +33,11 @@
             <!-- Post content-->
             <section class="mb-5">
                 <p>{{ diary.content }}</p>
+                <ul>
+                    {% for keyword in keywords %}
+                        <li>{{ keyword }}</li>
+                    {% endfor %}
+                </ul>
             </section>
 
             <div class="row chart-container">
