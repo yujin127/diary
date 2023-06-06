@@ -34,8 +34,8 @@
             <section class="mb-5">
                 <p>{{ diary.content }}</p>
                 <ul>
-                    {% for keyword in keywords %}
-                        <li>{{ keyword }}</li>
+                    {% for kw in keyword %}
+                        <li>{{ kw }}</li>
                     {% endfor %}
                 </ul>
             </section>
@@ -54,6 +54,10 @@
             <div class="row">
                 <img src="{% static 'image/' %}{{ bar_image_name }}" alt="Bar Chart"
                         style="width:1000px; height:300px; float:left;">
+            </div>
+            <div class="row">
+                <img src="{% static 'image/' %}{{ wordcloud_image_name }}" alt="Wordcloud Chart"
+                        style="width:500px; height:500px; float:left;">
             </div>
 
             <div class="my-3">

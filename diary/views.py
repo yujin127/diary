@@ -12,7 +12,7 @@ from django.views.generic import ListView
 from analysis.stat_model.charts import create_bar_chart, create_pie_chart, create_radar_chart
 import os
 import datetime
-from analysis.stat_model.wordcloud import keyword_list
+from analysis.stat_model.wordcloud_chart import keyword_list, make_wordcloud
 
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
@@ -41,7 +41,6 @@ class DiaryDetail(DetailView):
         context = super().get_context_data(**kwargs)
         diary = self.get_object()
         date = diary.created_at
-        today = datetime.date.today()
 
         radar_image_name = create_radar_chart(diary.author.id, date)
         radar_image_path = os.path.join('analysis/static/image', radar_image_name)
@@ -60,6 +59,11 @@ class DiaryDetail(DetailView):
 
         keyword = keyword_list(diary.author.id, date, 3)
         context['keyword'] = keyword
+
+        wordcloud_image_name = make_wordcloud(diary.author.id, date)
+        wordcloud_image_path = os.path.join('analysis/static/image', wordcloud_image_name)
+        context['wordcloud_image_name'] = wordcloud_image_name
+        context['wordcloud_image_path'] = wordcloud_image_path
 
         return context
 @login_required(login_url='common:login')
