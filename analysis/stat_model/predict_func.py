@@ -132,8 +132,12 @@ def make_df2(total_emotion):
     good = total_emotion.count('기쁨') + total_emotion.count('행복')
     total_counts = good + bad
 
-    good_percent = good / total_counts * 100
-    bad_percent = bad / total_counts * 100
+    if total_counts == 0:
+        good_percent = good / (total_counts + 1) * 100
+        bad_percent = bad / (total_counts + 1) * 100
+    else:
+        good_percent = good / total_counts * 100
+        bad_percent = bad / total_counts * 100
 
     emotion_df = pd.DataFrame({'긍정': good_percent, '부정': bad_percent}, index=[0])
 

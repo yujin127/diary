@@ -60,6 +60,19 @@
                         style="width:500px; height:500px; float:left;">
             </div>
 
+            <div class="row">
+                <p>{{ movie_name }}</p>
+                <p>{{ movie_info }}</p>
+                <img src="{% static 'image/' %}{{ movie_image_name }}" alt="Movie Image"
+                        style="width:500px; height:500px; float:left;">
+            </div>
+            <div class="row">
+                <p>{{ music_title }} - {{ music_artist }}</p>
+                <img src="{% static 'image/' %}{{ music_image_name }}" alt="Music Image"
+                        style="width:100px; height:100px; float:left;">
+            </div>
+            <hr>
+
             <div class="my-3">
                 {% if request.user == diary.author %}
                 <a href="{% url 'diary:diary_update' diary.id %}" class="btn btn-sm btn-outline-secondary">

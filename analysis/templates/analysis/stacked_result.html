@@ -3,6 +3,11 @@
 {% block main_area %}
     <h1>누적 분석 결과 시각화</h1>
 <!--    <p>{{ df }}</p>-->
+    <ul>
+        {% for kw in keyword %}
+            <li>{{ kw }}</li>
+        {% endfor %}
+    </ul>
     <p>{{ df_good_bad }}</p>
     <p>{{ df_fin }}</p>
     {% load static %}
@@ -17,5 +22,9 @@
         <div class="row">
             <img src="{% static 'image/'|add:weekly_bar_image_name %}" alt="Weekly Bar Chart"
             style="width:1000px; height:600px; float:left; margin-right:20px">
+        </div>
+        <div class="row">
+            <img src="{% static 'image/'|add:weekly_wordcloud_image_name %}" alt="Weekly Wordcloud Chart"
+            style="width:500px; height:500px; float:left; margin-right:20px">
         </div>
 {% endblock %}

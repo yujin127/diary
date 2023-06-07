@@ -13,7 +13,8 @@ from analysis.stat_model.charts import create_bar_chart, create_pie_chart, creat
 import os
 import datetime
 from analysis.stat_model.wordcloud_chart import keyword_list, make_wordcloud
-
+from .contents.movie_recommend import movie_recommend
+from .contents.music_recommend import music_recommend
 
 @method_decorator(login_required(login_url='common:login'), name='dispatch')
 class DiaryList(ListView):
@@ -65,6 +66,21 @@ class DiaryDetail(DetailView):
         context['wordcloud_image_name'] = wordcloud_image_name
         context['wordcloud_image_path'] = wordcloud_image_path
 
+        movie_name, movie_image_name, movie_info = movie_recommend(diary.author.id, date)
+        movie_image_name = f'{movie_image_name}.jpg'
+        movie_image_path = os.path.join('analysis/static/image', movie_image_name)
+        context['movie_name'] = movie_name
+        context['movie_image_name'] = movie_image_name
+        context['movie_image_path'] = movie_image_path
+        context['movie_info'] = movie_info
+
+        music_image_name, music_title, music_artist = music_recommend(diary.author.id, date)
+        music_image_path = os.path.join('analysis/static/image', music_image_name)
+        context['music_title'] = music_title
+        context['music_artist'] = music_artist
+        context['music_image_name'] = music_image_name
+        context['music_image_path'] = music_image_path
+
         return context
 @login_required(login_url='common:login')
 def diary_form(request):
@@ -81,7 +97,7 @@ def diary_form(request):
             diary = form.save(commit=False)
             diary.author = request.user
             diary.save()
-            return redirect('/analysis/today_result/')
+            return redirect('/diary/diary_detail/')
     else:
         form = DiaryForm()
 
