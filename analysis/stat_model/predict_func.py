@@ -103,6 +103,20 @@ def predict_main(author_id, date):
         emotions = predict(d_l[i], model, tokenizer, vocab)
         total_emotion.extend(emotions)
 
+    if '불안' in total_emotion:
+        index1 = total_emotion.index('불안')
+        total_emotion[index1] = '슬픔'
+    elif '당황' in total_emotion:
+        index2 = total_emotion.index('당황')
+        total_emotion[index2] = '슬픔'
+    elif '상처' in total_emotion:
+        index3 = total_emotion.index('상처')
+        total_emotion[index3] = '슬픔'
+    elif '혐오' in total_emotion:
+        index4 = total_emotion.index('혐오')
+        total_emotion[index4] = '분노'
+    else:
+        total_emotion = total_emotion
     diary.emotion_data = total_emotion
     diary.save()
 
@@ -143,4 +157,24 @@ def make_df2(total_emotion):
 
     return emotion_df
 
+def count_emotion(total_emotion):
+    def count_emotion(total_emotion):
+        if total_emotion is None:
+            return None
+    sad = total_emotion.count('슬픔') + total_emotion.count('불안') + total_emotion.count('당황') + total_emotion.count('상처')
+    angry = total_emotion.count('분노') + total_emotion.count('혐오')
+    joy = total_emotion.count('기쁨')
+    happy = total_emotion.count('행복')
+    surprise = total_emotion.count('놀람')
+    fear = total_emotion.count('공포')
 
+    result = {
+        '슬픔': sad,
+        '분노': angry,
+        '기쁨': joy,
+        '행복': happy,
+        '놀람': surprise,
+        '공포': fear
+    }
+
+    return result

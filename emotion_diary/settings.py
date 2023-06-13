@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'single_pages',
     'diary.apps.DiaryConfig',
     'common.apps.CommonConfig',
-    'analysis'
+    'analysis',
+    'django_social_share',
 ]
 
 MIDDLEWARE = [

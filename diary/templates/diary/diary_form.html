@@ -1,21 +1,32 @@
-<!DOCTYPE html>
 {% extends 'diary/base.html' %}
 
 {% block main_area %}
 <body>
-    <div class="container py-1">
-        <h1 class="my-4">Create New Diary</h1>
-        <h6>작성일자 : <span id="current_date"></span></h6>
-        <hr>
-
-        <form method="POST" enctype="multipart/form-data" action="">
+    <div class="container mb-5">
+        <h1 class="my-3 border-bottom pb-2"><span id="current_date"></span> 오늘의 일기</h1>
+        <form method="POST" class="post-form my-3" enctype="multipart/form-data" action="">
             {% csrf_token %}
-
-            <table>
-                {{ form.as_table }}
-            </table>
-            <br>
-            <input type="submit" class="btn btn-primary" value="일기 작성">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="form-control" name="title" id="title"
+                    value="{{ form.title.value|default_if_none:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea name="content" id="content" class="form-control" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+            <div class="form-group mb-5">
+                <div class="row mt-2 mb-5">
+                    <div id="fbtn">
+                        {{ form.head_image }}
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary justify-content-end"
+                               style="background-color: #9391C3; border:0px; float:right; color:#ffffff"
+                               id="wbtn" value="일기 작성">
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 

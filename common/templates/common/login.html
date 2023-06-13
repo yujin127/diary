@@ -17,10 +17,12 @@
         <input type="password" class="form-control" name="password" id="password"
                 value="{{ form.password.value|default_if_none:'' }}">
       </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
-        <hr/>
-        <button type="submit" class="btn btn-secondary">
+
+          <button type="submit" class="btn btn-primary">로그인</button>
+
+          <button type="submit" class="btn btn-secondary float-end">
           <a class="nav-link" href="{% url 'common:signup' %}">회원가입</a></button>
+
       </form>
     </div>
 {% endblock %}

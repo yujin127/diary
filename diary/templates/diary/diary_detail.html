@@ -1,88 +1,370 @@
 {% extends 'diary/base.html' %}
 
 {% block head_title %}
-    {{  diary.title }} - Diary
+{{  diary.title }} - Diary
 {% endblock %}
 
-    {% block main_area %}
-        <div id="post-area">
-            {% if messages %}
-            <div class="alert alert-danger my-3" role="alert">
-                {% for message in messages %}
-                    <strong>{{ message.tag }}</strong>
-                    <ul><li>{{ message.message }}</li></ul>
-                {% endfor %}
-            </div>
-            {% endif %}
-            <!-- Post title-->
-            <h1 class="fw-bolder mb-1">{{ diary.title }}</h1>
-            <hr/>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Charts - SB Admin</title>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+    .card-body {
+        position: relative;
+        padding-bottom: 2rem; /* Add some padding at the bottom to make space for the buttons */
+    }
 
-            <!-- Post meta content-->
-            <div class="text-muted fst-italic mb-2">{{ diary.created_at }}</div>
-            <!-- Preview image figure-->
-            {% if diary.head_image %}
-            <img class="img-fluid rounded" src="{{ diary.head_image.url }}"
-                 alt="{{ diary.title }} head_image"/>
-            {% else %}
-            <img class="img-fluid rounded" src="https://picsum.photos/seed/{{ diary.id }}/800/200"
-                 alt="random_image">
-            {% endif %}
-            <hr/>
+    .card-buttons {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0.5rem; /* Add some padding to the buttons */
+    }
 
-            <!-- Post content-->
-            <section class="mb-5">
-                <p>{{ diary.content }}</p>
-                <ul>
-                    {% for kw in keyword %}
-                        <li>{{ kw }}</li>
-                    {% endfor %}
-                </ul>
-            </section>
+    .card-buttons .btn {
+        margin-left: 5px;
+    }
 
-            <div class="row chart-container">
-                {% load static %}
-                <div>
-                    <img src="{% static 'image/' %}{{ radar_image_name }}" alt="Radar Chart"
-                            style="width:500px; height:500px; float:left; margin-right:20px">
+    .list-group-item {
+        background-color: #FFF6FF;
+        color: #484049;
+        margin-bottom: 1rem;
+        border: none; /* Add this to remove any unwanted border styles */
+    }
+
+    </style>
+    <script>
+        window.onload = function() {
+            location.reload();
+        };
+    </script>
+</head>
+{% block main_area %}
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+        {% for message in messages %}
+        <strong>{{ message.tag }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% load static %}
+    <div style="display: flex; align-items: center;">
+        <h1 class="fw-bolder my-3" style="color:#484049; flex-grow: 1;">{{ diary.title }}</h1>
+        <audio controls autoplay onloadstart="this.volume=0.2">
+            <source src="{% static 'bgm/' %}{{ emotion }}.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    <!-- Post title-->
+<!--    <h1 class="fw-bolder mb-3" style="color:#484049;">{{ diary.title }}</h1>-->
+    <!-- Post meta contents-->
+    <div class="text-muted mb-1" style="color:#484049;">
+        {{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}
+    </div>
+
+<!--일기 사진 및 내용-->
+    <div class="card mb-5" style="background-color: #f0e6ef;">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex justify-content-center align-items-center" style="overflow: hidden;">
+                {% if p.head_image %}
+                <div style="width: 100%; height: 200px; position: relative; padding: 10px;">
+                    <img src="{{ p.head_image.url }}" alt="{{ p }} head_image"
+                         style="object-fit: cover; object-position:center; width: 100%; height: 100%; padding-left: 10px;">
                 </div>
-                <div>
-                    <img src="{% static 'image/' %}{{ pie_image_name }}" alt="Pie Chart"
-                            style="width:500px; height:500px; float:left;">
+                {% else %}
+                <div style="width: 100%; height: 200px; position: relative; padding: 10px;">
+                    <img src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image"
+                         style="object-fit: cover; object-position:center; width: 100%; height: 100%; padding-left: 10px;">
                 </div>
-            </div>
-            <div class="row">
-                <img src="{% static 'image/' %}{{ bar_image_name }}" alt="Bar Chart"
-                        style="width:1000px; height:300px; float:left;">
-            </div>
-            <div class="row">
-                <img src="{% static 'image/' %}{{ wordcloud_image_name }}" alt="Wordcloud Chart"
-                        style="width:500px; height:500px; float:left;">
-            </div>
-
-            <div class="row">
-                <p>{{ movie_name }}</p>
-                <p>{{ movie_info }}</p>
-                <img src="{% static 'image/' %}{{ movie_image_name }}" alt="Movie Image"
-                        style="width:500px; height:500px; float:left;">
-            </div>
-            <div class="row">
-                <p>{{ music_title }} - {{ music_artist }}</p>
-                <img src="{% static 'image/' %}{{ music_image_name }}" alt="Music Image"
-                        style="width:100px; height:100px; float:left;">
-            </div>
-            <hr>
-
-            <div class="my-3">
-                {% if request.user == diary.author %}
-                <a href="{% url 'diary:diary_update' diary.id %}" class="btn btn-sm btn-outline-secondary">
-                    수정하기
-                </a>
-                <a href="{% url 'diary:diary_delete' diary.id %}" class="btn btn-danger">
-                    삭제하기
-                </a>
                 {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body" style="background-color: #f0e6ef;">
+                    <h5 class="card-text" style="color:#484049">{{ diary.content }}</h5>
+                    {% if request.user == diary.author %}
+                    <div class="card-buttons">
+                        <a href="{% url 'diary:diary_update' diary.id %}" class="btn btn-outline-light btn-sm"
+                        style="background-color:#FFF6FE">수정하기</a>
+                        <a href="{% url 'diary:diary_delete' diary.id %}" class="btn btn-outline-danger btn-sm"
+                        style="background-color:#b8bedd">삭제하기</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--주요 키워드-->
+<div class="d-grid gap-2 mb-4 mt-2">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                    type="button" style="width: 200px; background-color:#B88DCA;">
+            <h4 class="fw-bolder" style="color:#ffffff;">주요 키워드</h4></button>
+        </div>
+        <div class="col">
+            <h4 class="fw-bolder" style="color:#484049">"오늘 나의 일기에 가장 많이 등장한 단어에요!"</h4>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+            <i class="fas fa-font"></i>&nbsp 오늘 나의 일기 키워드
+        </div>
+        <div class="card-body " style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+            <canvas id="myAreaChart" width="100%" height="30"></canvas>
+            <div class="row">
+                <div class="col-auto">
+                    <img src="{% static 'image/' %}{{ wordcloud_image_name }}" alt="Wordcloud Chart"
+                        style="width:300px; height:300px; float:left;">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="mb-4">
+                                {% for item in keyword|slice:":3" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center mb-4">
+                                        <button type="button" class="btn btn-primary"
+                                                style=" width: 400px; background-color:#FFF6FF; color:#484049">
+                                            <span class="float-start"><h4><strong>{{ forloop.counter }}. &nbsp</strong></h4></span>
+                                            <span class="float-start"><h4><strong>{{ item.keyword }}</strong></h4></span>
+                                        <span class=" float-end badge rounded-pill"
+                                              style="background-color:#A1A7C3; width:50px; height:40px; color:#ffffff"><h5><strong>{{ item.count }}</strong></h5></span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="mb-4">
+                                {% for rank, item in ranking|slice:"3:" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center mb-4">
+                                        <button type="button" class="btn btn-primary"
+                                                style=" width: 400px; background-color:#FFF6FF; color:#484049">
+                                            <span class="float-start"><h4><strong>{{ rank }}. &nbsp</strong></h4></span>
+                                            <span class="float-start"><h4><strong>{{ item.keyword }}</strong></h4></span>
+                                        <span class=" float-end badge rounded-pill"
+                                              style="background-color:#A1A7C3; width:50px; height:40px; color:#ffffff"><h5><strong>{{ item.count }}</strong></h5></span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+        </div>
+    </div>
+
+
+
+    <div class="d-grid gap-2 mb-4 mt-3">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                        type="button" style="width: 200px; background-color:#B88DCA;">
+                    <h4 class="fw-bolder" style="color:#ffffff;">감정 분석</h4></button>
+            </div>
+            <div class="col">
+                <h4 class="fw-bolder" style="color:#484049">"오늘 내가 느낀 감정들이에요!"</h4>
+            </div>
+        </div>
+    </div>
+
+<!-- 파이차트 & 레이더차트 -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    오늘 나의 감정 스탯
+                </div>
+                <div class="card-body d-flex flex-column align-items-center justify-content-center flex-fill"
+                     style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+                    <canvas id="myRadarChart" width="100%" height="100"></canvas>
+                        <img src="{% static 'image/' %}{{ radar_image_name }}" alt="Radar Chart"
+                             style="width:400px; height:400px;margin-right:8px;margin-top:-80px;">
+                </div>
+                <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+                </div>
             </div>
         </div>
 
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+                    <i class="fas fa-chart-pie me-1"></i>
+                    오늘 나의 감정 이모티콘
+                </div>
+                <div class="card-body d-flex flex-column align-items-center justify-content-center flex-fill"
+                     style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+                    {% if emotion_counts %}
+                    <h2 style="font-weight: bold;">오늘의 감정은</h2>
+                    {% if emotion %}
+                    <div class="text-center">
+                        <img src="{% static 'emoticon/'|add:emotion|add:'.png' %}" alt="{{ emotion }}"
+                             style="width: 190px; height: 190px;">
+                    </div>
+                    <br>
+                    <h2 style="font-weight: bold;">{{ emotion }}이에요.</h2>
+                    <br>
+                    {% endif %}
+                    <div class="row">
+                        {% for emotion, count in emotion_counts.items %}
+                        <div class="col-sm-4">
+                            <img src="{% static 'emoticon/'|add:emotion|add:'.png' %}" alt="{{ emotion }}"
+                                 style="width: 45px; height: 45px;">
+                            {{ emotion }}: {{ count }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>감정 데이터가 없습니다.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+                </div>
+            </div>
+        </div>
+</section>
+
+<!-- 파이차트 + 바차트 -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+            <i class="fas fa-chart-area me-1"></i>
+            오늘 나의 감정 비율
+        </div>
+        <div  class="card-body" style="display: flex; flex-wrap: nowrap; background-color:#ffffff; border: 1px solid #f0e6ef;">
+            <canvas id="mypieChart1" width="100%" height="30"></canvas>
+            <img src="{% static 'image/' %}{{ pie_image_name }}" alt="Pie Chart"
+                 style="width:400px; height:400px; float:left;">
+            <img src="{% static 'image/' %}{{ barplot_image_name }}" alt="Bar plot"
+                 style="width:800px; height:400px">
+        </div>
+        <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+            <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+        </div>
+    </div>
+
+
+<!-- 컨텐츠 추천 -->
+    <div class="d-grid gap-2 mb-3">
+        <div class="row align-items-center my-5">
+            <div class="col-auto">
+                <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                        type="button" style="width: 200px; background-color:#A1A7C3;">
+                    <h4 class="fw-bolder" style="color:#ffffff;">컨텐츠 추천</h4></button>
+            </div>
+            <div class="col">
+                <h4 class="fw-bolder" style="color:#484049">"{{ emotion }} 감정을 위한 추천이에요!"</h4>
+            </div>
+        </div>
+    </div>
+
+<div class="row mt-5">
+        <div class="col-lg-4 mb-1">
+            <div class="card bg-light border-0 h-100">
+                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                    <h4 class="fw-bolder mb-3 mt-6" style="margin-top: 80px; color:#343D68">{{ movie_name }}</h4>
+                    <img src="{% static 'image/' %}{{ movie_image_name }}" alt="Movie Image" style="width: 200px; height: 300px; margin-top: 40px;">
+                    <span class="position-absolute top-0 start-50 translate-middle badge d-flex justify-content-center align-items-center"
+                            style="width: 120px; height: 60px; background-color:#A1A7C3;">
+                            <h3 class="fw-bolder" style="color:#ffffff"><i class="fas fa-video"></i></h3>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    <div class="col-lg-4 mb-1">
+        <div class="card bg-light border-0 h-100">
+            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-cloud-download"></i></div>
+                <h4 class="fw-bolder mb-3 mt-6" style="margin-top: 60px; color:#343D68">{{ music_title }}</h4>
+                <h6 class="fw-bolder mb-3 mt-6" style="margin-top: 5px; color:#343D68">{{ music_artist }}</h6>
+                <img src="{% static 'image/' %}{{ music_image_name }}" alt="Music Image" style="width: 200px; height: 200px; margin-top: 40px;">
+                <span class="position-absolute top-0 start-50 translate-middle badge d-flex justify-content-center align-items-center"
+                   style="width: 120px; height: 60px; background-color:#A1A7C3;">
+                    <h3 class="fw-bolder" style="color:#ffffff"><i class="fas fa-headphones"></i></h3></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-1">
+        <div class="card bg-light border-0 h-100">
+            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
+                <h4 class="fw-bolder mb-3 mt-6" style="margin-top: 60px; color:#343D68">{{ book_title }}</h4>
+                <h6 class="fw-bolder mb-3 mt-6" style="margin-top: 5px; color:#343D68">{{ book_author }}</h6>
+                <img src="{% static 'image/' %}{{ book_image_name }}" alt="Book Image" style="width: 200px; height: 300px; margin-top: 20px;">
+                <span class="position-absolute top-0 start-50 translate-middle badge d-flex justify-content-center align-items-center"
+                   style="width: 120px; height: 60px; background-color:#A1A7C3;">
+                    <h3 class="fw-bolder" style="color:#ffffff"><i class="fas fa-book"></i></h3></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-4">
+        <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    <strong style="color:#343D68">Movie Info</strong>
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <h5 style="color:#343D68" class="fw-bolder">줄거리</h5>
+                    <p style="color:#343D68">{{ movie_info }}</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="accordion" id="accordionExample2">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <strong style="color:#343D68">Music Link</strong>
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <h5 style="color:#343D68" class="fw-bolder">노래 링크</h5>
+                    <a href="{{ album_link }}">{{ music_title }} &nbsp 지금 들으러 가기!</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="accordion" id="accordionExample3">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <strong style="color:#343D68">Book Info</strong>
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <h5 style="color:#343D68" class="fw-bolder">책 소개</h5>
+                    <p style="color:#343D68">{{ book_info }}</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

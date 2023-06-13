@@ -80,8 +80,17 @@ def movie_recommend(author_id, date):
         '행복': {'movies': happy_movies, 'images': [f"happy_movie_image{i}" for i in range(1, 11)], 'info':happy_info}
     }
 
-    emotion_df = make_df(predict_main(author_id, date))
-    most_frequent_emotions = emotion_df.columns[emotion_df.iloc[0].eq(emotion_df.iloc[0].max())].tolist()
+    try:
+        diary = Diary.objects.filter(author_id=author_id, created_at=date).order_by('-created_at')[0]
+    except (Diary.DoesNotExist, IndexError):
+        diary = None
+    if diary is None:
+        diary = Diary.objects.filter(author_id=author_id).latest('created_at')
+    emotion_data = diary.emotion_data
+    emotion_data = eval(emotion_data)
+    emotion_frequency = Counter(emotion_data)
+    max_frequency = max(emotion_frequency.values())
+    most_frequent_emotions = [emotion for emotion, count in emotion_frequency.items() if count == max_frequency]
     selected_emotion = random.choice(most_frequent_emotions)
     selected_movies = list_dict.get(selected_emotion, {}).get("movies")
     selected_info = list_dict.get(selected_emotion, {}).get("info")

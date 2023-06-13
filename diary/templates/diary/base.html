@@ -6,8 +6,20 @@
     <title>Diary</title>
     <link href="{% static 'diary/bootstrap/bootstrap.min.css' %}" rel="stylesheet" media="screen">
     <script src="https://kit.fontawesome.com/9cab486a7f.js" crossorigin="anonymous"></script>
+    <style>
+        @font-face {
+            font-family : "SCDream4";
+            src: url("SCDream4.otf") format("opentype");
+            }
+        body {
+            font-family: "SCDream4", sans-serif;
+            }
+        p, h4, h1, h2, h3, h5, h6 {
+            font-family: "SCDream4", sans-serif;
+            }
+    </style>
 </head>
-<body>
+<body style="background-color: #ffffff;">
 
 {% include 'diary/navbar.html' %}
 

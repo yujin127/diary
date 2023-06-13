@@ -8,6 +8,7 @@ import numpy as np
 from PIL import Image
 import os
 import datetime
+from matplotlib.colors import LinearSegmentedColormap
 
 def keyword_list(author_id, date, n):
     try:
@@ -28,12 +29,8 @@ def keyword_list(author_id, date, n):
     remove_stopwords = [x for x in noun if x not in list_file]
     count = Counter(remove_stopwords)
     noun_list = count.most_common(n)
-    keyword = []
-    for v in noun_list:
-        keyword.append(v[0])
-
+    keyword = [{'keyword': kw, 'count': cnt} for kw, cnt in noun_list]
     return keyword
-
 
 def make_wordcloud(author_id, date):
     try:
@@ -58,8 +55,8 @@ def make_wordcloud(author_id, date):
     wordcloud = WordCloud(
         font_path='C:/workspace/emotion_diary/NanumBarunGothic.ttf',
         background_color='white',  # 배경색은 흰색으로
-        colormap='Reds',  # 글씨색은 빨간색으로
-        mask=imgArray,  # 워드클라우드 모양 설정
+        colormap='Set3',  # 글씨색은 빨간색으로
+        mask=imgArray,# 워드클라우드 모양 설정
     ).generate_from_frequencies(count)  # count -> make_noun_list(diary)에서 생성한 딕셔너리
     # 사이즈 설정 및 출력
     plt.figure(figsize=(5, 5))
@@ -90,10 +87,7 @@ def cum_keyword_list(author_id, n):
     remove_stopwords = [x for x in noun if x not in list_file]
     count = Counter(remove_stopwords)
     noun_list = count.most_common(n)
-    keyword = []
-    for v in noun_list:
-        keyword.append(v[0])
-
+    keyword = [{'keyword': kw, 'count': cnt} for kw, cnt in noun_list]
     return keyword
 
 def cum_make_wordcloud(author_id):
@@ -116,8 +110,8 @@ def cum_make_wordcloud(author_id):
     wordcloud = WordCloud(
         font_path='C:/workspace/emotion_diary/NanumBarunGothic.ttf',
         background_color='white',  # 배경색은 흰색으로
-        colormap='Reds',  # 글씨색은 빨간색으로
-        mask=imgArray,  # 워드클라우드 모양 설정
+        colormap='Set3',  # 글씨색은 빨간색으로
+        mask=imgArray,# 워드클라우드 모양 설정
     ).generate_from_frequencies(count)  # count -> make_noun_list(diary)에서 생성한 딕셔너리
     # 사이즈 설정 및 출력
     plt.figure(figsize=(5, 5))

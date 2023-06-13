@@ -5,6 +5,7 @@ import datetime
 import os
 from .predict_func import make_df
 
+
 def make_stacked_df(author_id):
     if Diary.objects.count() >= 7:
         data = []
@@ -34,9 +35,12 @@ def make_stacked_df_fin(author_id):
         for i in range(7):
             diary = Diary.objects.filter(author_id=author_id).order_by('-created_at')[6 - i]
             emotions_count = [diary.emotion_data.count(emotion) for emotion in emotions]
+            total_count = sum(emotions_count)
+            emotions_percent = [count / total_count * 100 for count in emotions_count]
             index.append(diary.created_at)
-            data.append(emotions_count)
+            data.append(emotions_percent)
         df = pd.DataFrame(data, columns=emotions, index=index)
+
         return df
 
 def make_good_bad_df(author_id):
@@ -65,15 +69,12 @@ def make_stacked_df_fin_per(author_id):
         emotions = ['슬픔', '분노', '기쁨', '행복', '놀람', '공포']
         index = []
         data = []
-        prev_emotions_count = [0] * len(emotions)
         for i in range(7):
             diary = Diary.objects.filter(author_id=author_id).order_by('-created_at')[6 - i]
             emotions_count = [diary.emotion_data.count(emotion) for emotion in emotions]
-            emotions_count = [curr_count + prev_count for curr_count, prev_count in zip(emotions_count, prev_emotions_count)]
             total_count = sum(emotions_count)
             emotions_percent = [count / total_count * 100 for count in emotions_count]
             index.append(diary.created_at)
             data.append(emotions_percent)
-            prev_emotions_count = emotions_count
         df = pd.DataFrame(data, columns=emotions, index=index)
         return df

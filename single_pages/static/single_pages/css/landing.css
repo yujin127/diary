@@ -1,13 +1,67 @@
 body {
-    background: url('/static/single_pages/images/desk.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
+    background: url('/static/single_pages/images/maind1.jpg') no-repeat center center fixed;
+    background-size: 1750px 800px;
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+#mainbox1 {
+    margin-top:30px;
+    margin-left:20em;
 }
 
-section {
-    margint-bottom: 150px;
+.notebook{
+    width:250px;
+    height:200px;
+    background-color:transparent;
+    border: 0px;
+    top: 380px;
+    left: 25em;
+
+    filter: brightness(1);
+}
+.note{
+    width:250px;
+    height:200px;
+    background-color:transparent;
+    border: 0px;
+    top: 410px;
+    left:37em;
+
+    filter: brightness(1);
+}
+.result{
+    width:250px;
+    height:200px;
+    background-color:transparent;
+    border: 0px;
+    top: 410px;
+    left: 50em;
+
+    filter: brightness(1);
+
+}
+.about_me{
+    width:250px;
+    height:200px;
+    background-color:transparent;
+    border: 0px;
+    top:380px;
+    left: 62em;
+
+    filter: brightness(1);
+}
+.notebook:hover{
+    filter: brightness(0.5);
+}
+.note:hover{
+    filter: brightness(0.5);
+}
+.result:hover{
+    filter: brightness(0.5);
+}
+.about_me:hover {
+    filter: brightness(0.5);
 }
 
 .card {

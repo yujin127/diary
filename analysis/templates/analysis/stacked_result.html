@@ -1,30 +1,210 @@
 {% extends 'diary/base.html' %}
-
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        @font-face {
+            font-family : "SCDream4";
+            src: url("SCDream4.otf") format("opentype");
+            }
+    </style>
+</head>
 {% block main_area %}
-    <h1>누적 분석 결과 시각화</h1>
-<!--    <p>{{ df }}</p>-->
-    <ul>
-        {% for kw in keyword %}
-            <li>{{ kw }}</li>
-        {% endfor %}
-    </ul>
-    <p>{{ df_good_bad }}</p>
-    <p>{{ df_fin }}</p>
-    {% load static %}
-        <div class="row">
-            <img src="{% static 'image/'|add:weekly_line_image_name %}" alt="Weekly Line Chart"
-            style="width:1000px; height:600px; float:left; margin-right:20px">
+{% load static %}
+    <div style="display: flex; align-items: center;">
+        <h1 class="fw-bolder my-3" style="color:#484049; flex-grow: 1;">Weekly Result</h1>
+        <audio controls autoplay onloadstart="this.volume=0.2">
+            <source src="{% static 'bgm/' %}{{ emotion }}.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+
+    <!--주요 키워드-->
+<div class="d-grid gap-2 mb-3 mt-4">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                    type="button" style="width: 200px; background-color:#B88DCA;">
+            <h4 class="fw-bolder" style="color:#ffffff;">주요 키워드</h4></button>
         </div>
-        <div class="row">
-            <img src="{% static 'image/'|add:cum_weekly_line_image_name %}" alt="Cum_Weekly Line Chart"
-            style="width:1000px; height:600px; float:left; margin-right:20px">
+        <div class="col">
+            <h4 class="fw-bolder" style="color:#484049">"최근 7일 나의 일기에 가장 많이 등장한 단어예요!"</h4>
         </div>
-        <div class="row">
-            <img src="{% static 'image/'|add:weekly_bar_image_name %}" alt="Weekly Bar Chart"
-            style="width:1000px; height:600px; float:left; margin-right:20px">
+    </div>
+</div>
+
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+            <i class="fas fa-font"></i>&nbsp 일주일간 나의 키워드
         </div>
-        <div class="row">
-            <img src="{% static 'image/'|add:weekly_wordcloud_image_name %}" alt="Weekly Wordcloud Chart"
-            style="width:500px; height:500px; float:left; margin-right:20px">
+        <div class="card-body " style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+            <canvas id="myAreaChart" width="100%" height="30"></canvas>
+            <div class="row">
+                <div class="col-auto">
+                    <img src="{% static 'image/' %}{{ weekly_wordcloud_image_name }}" alt="Wordcloud Chart"
+                        style="width:350px; height:350px; float:left;">
+                </div>
+                <div class="col" style="margin-top:30px">
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="mb-4">
+                                {% for item in keyword|slice:":3" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center mb-4">
+                                        <button type="button" class="btn btn-primary"
+                                                style=" width: 400px; background-color:#FFF6FF; color:#484049">
+                                            <span class="float-start"><h4><strong>{{ forloop.counter }}. &nbsp</strong></h4></span>
+                                            <span class="float-start"><h4><strong>{{ item.keyword }}</strong></h4></span>
+                                        <span class=" float-end badge rounded-pill" style="background-color:#A1A7C3;
+                                        width:50px; height:40px;color:#ffffff"><h5><strong>{{ item.count }}</strong></h5></span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="mb-4">
+                                {% for rank, item in ranking|slice:"3:" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center mb-4">
+                                        <button type="button" class="btn btn-primary"
+                                                style=" width: 400px; background-color:#FFF6FF; color:#484049">
+                                            <span class="float-start"><h4><strong>{{ rank }}. &nbsp</strong></h4></span>
+                                            <span class="float-start"><h4><strong>{{ item.keyword }}</strong></h4></span>
+                                        <span class=" float-end badge rounded-pill" style="background-color:#A1A7C3;
+                                        width:50px; height:40px;color:#ffffff"><h5><strong>{{ item.count }}</strong></h5></span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p>{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+        </div>
+    </div>
+<div class="d-grid gap-2 mb-4 mt-3">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                        type="button" style="width: 200px; background-color:#B88DCA;">
+                    <h4 class="fw-bolder" style="color:#ffffff;">감정 분석</h4></button>
+            </div>
+            <div class="col">
+                <h4 class="fw-bolder" style="color:#484049">"최근 7일 나의 감정변화는 이랬어요!"</h4>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- 감정 색깔 팔레트 -->
+        <div class="card mb-4">
+        <div class="card-body d-flex flex-column align-items-center"
+             style="background-color:#ffffff;">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/angry_color.png' %}" alt="angry_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">분노</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/surprise_color.png' %}" alt="surprise_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">놀람</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/happy_color.png' %}" alt="happy_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">행복</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/joy_color.png' %}" alt="joy_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">기쁨</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/sad_color.png' %}" alt="sad_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">슬픔</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="{% static 'image/fear_color.png' %}" alt="fear_color" style="width:80px; height:80px; float: left;">
+                            </div>
+                            <div class="col">
+                                <h3 style="display: inline-block; margin-top: 20px; color:#484049">공포</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+
+<!-- line chart -->
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+            <i class="fas fa-chart-area me-1"></i>&nbsp 일주일간 나의 감정 변화
+        </div>
+        <div class="card-body d-flex flex-column align-items-center"
+             style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+            <canvas id="myAreaChart1" width="100%" height="20"></canvas>
+                <div class="row">
+                    <img src="{% static 'image/'|add:weekly_line_image_name %}" alt="Weekly Line Chart"
+                         style="width:1000px; height:600px;">
+                </div>
+        </div>
+        <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+        </div>
+    </div>
+
+    <div class="card mb-5">
+        <div class="card-header" style="background-color: #f0e6ef; border-radius: 10px; color:#484049;">
+            <i class="fas fa-chart-area me-1"></i>&nbsp 일주일간 나의 감정 분포
+        </div>
+        <div class="card-body d-flex flex-column align-items-center"
+             style="background-color:#ffffff; border: 1px solid #f0e6ef;">
+            <canvas id="myAreaChart2" width="100%" height="30"></canvas>
+                <div class="row">
+                    <img src="{% static 'image/'|add:weekly_bar_image_name %}" alt="Weekly Bar Chart"
+                         style="width:1000px; height:600px; float:center; margin-right:20px">
+                </div>
+        </div>
+        <div class="card-footer small text-muted" style="background-color:#f0e6ef; border-radius: 10px;">
+                    <p class="my-0">{{ diary.created_at|date:"F" }} {{ diary.created_at.day }}일, {{ diary.created_at|date:"Y년" }}</p>
+        </div>
+    </div>
 {% endblock %}

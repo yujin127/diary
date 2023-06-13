@@ -1,45 +1,44 @@
-<!DOCTYPE html>
+{% extends 'diary/base.html' %}
 {% load static %}
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>About me</title>
-    <link href="{% static 'diary/bootstrap/bootstrap.min.css' %}" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="{% static 'single_pages/css/about_me.css' %}" media="screen">
-    <script src="https://kit.fontawesome.com/9cab486a7f.js" crossorigin="anonymous"></script>
-</head>
-<body>
-{% include 'diary/navbar.html' %}
-<div style="padding: 50px;">
-    <h1 class="mt-1">About me</h1><hr>
-
-    <div  style="width:30%; padding:10px; float:left;">
-        <div class="row">
-            <div class="col-lg8" style="padding-right:30px;">
-                    <img class="img-fluid" src="{% static 'single_pages/images/rabbit.jpeg' %}" height="300px;">
-            </div>
-        </div>
+{% block main_area %}
+<div style="padding: 10px;">
+    <div>
+        <h1 class="mt-5" style="text-align:center; margin-right: 150px;">About me</h1><hr>
     </div>
+    <div class="container">
     {% if user.is_authenticated %}
-    <div style="width:30%; padding:10px; float:left;">
         <div class="row">
-            <div class="col-12">
-                <h4>이름 : {{ user.first_name }}</h4>
-                <h4>Email : {{ user.email }}</h4>
+            <div class="col-lg-8" style="padding: 30px; margin-left: 150px;">
+                <div class="row">
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+                        <img class="img-fluid" src="{% static 'single_pages/images/rabbit.jpeg' %}" height="450px;" width="300px;">
+                    </div>
+                    <div class="col-md-6" style="padding: 0 30px;">
+                        <h4>이름: {{ user.username }}</h4>
+                        <h4>메일: {{ user.email }}</h4>
+                        <hr>
+                        {% if info %}
+                            {% for i in info %}
+                                <div class="con2">
+                                    <h4>전화번호: {{ i.number }}</h4>
+                                    <h4>주소: {{ i.address }}</h4>
+                                    <h4>생년월일: {{ i.birth }}</h4>
+                                    <h4>학교: {{ i.school }}</h4>
+                                    <h4>MBTI: {{ i.mbti }}</h4>
+                                    <h4>취미: {{ i.hobby }}</h4>
+                                </div>
+                            {% endfor %}
+                            <input type="button" onclick="location.href='/info/'" class="btn btn-primary justify-content-end"
+                               style="color:#ffffff; background-color:#9391C3; border:0px;" id="wbtn3" value="정보수정">
+                        {% else %}
+                            <input type="button" onclick="location.href='/info/'" class="btn btn-primary justify-content-end"
+                                   style="color:#ffffff; background-color:#9391C3; border:0px;" id="wbtn2" value="정보수정">
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     {% endif %}
 </div>
-<div class="fixed-bottom">
-    {% include 'diary/footer.html' %}
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}

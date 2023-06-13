@@ -8,12 +8,23 @@ from bs4 import BeautifulSoup
 import random
 import os
 from analysis.stat_model.predict_func import make_df, predict_main
+from diary.models import Diary
+from collections import Counter
+import urllib.parse
 
 def music_recommend(author_id, date):
-    emotion_df = make_df(predict_main(author_id, date))
-    most_frequent_emotions = emotion_df.columns[emotion_df.iloc[0].eq(emotion_df.iloc[0].max())].tolist()
+    try:
+        diary = Diary.objects.filter(author_id=author_id, created_at=date).order_by('-created_at')[0]
+    except (Diary.DoesNotExist, IndexError):
+        diary = None
+    if diary is None:
+        diary = Diary.objects.filter(author_id=author_id).latest('created_at')
+    emotion_data = diary.emotion_data
+    emotion_data = eval(emotion_data)
+    emotion_frequency = Counter(emotion_data)
+    max_frequency = max(emotion_frequency.values())
+    most_frequent_emotions = [emotion for emotion, count in emotion_frequency.items() if count == max_frequency]
     emotion = random.choice(most_frequent_emotions)
-
     if emotion == "기쁨":
         url = "https://www.melon.com/mymusic/dj/mymusicdjplaylistview_inform.htm?plylstSeq=478102836"
     elif emotion == "슬픔":
@@ -27,7 +38,7 @@ def music_recommend(author_id, date):
     elif emotion == "행복":
         url = "https://www.melon.com/mymusic/dj/mymusicdjplaylistview_inform.htm?plylstSeq=490579862"
     else:
-        url = None
+        url = "https://www.melon.com/mymusic/dj/mymusicdjplaylistview_inform.htm?plylstSeq=490579862"
 
     header = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
     res = requests.get(url, headers=header).text
@@ -51,11 +62,27 @@ def music_recommend(author_id, date):
     thumbnail = selected_article.select_one('div > a > img')['src']
     image_response = requests.get(thumbnail)
     image_data = image_response.content
-    image_filename = f"{title}_{artist}.jpg"
+    image_filename = f"music_{title}_{artist}.jpg"
     image_path = os.path.join('C:/workspace/emotion_diary/analysis/static/image', image_filename)
     with open(image_path, 'wb') as f:
         f.write(image_data)
 
-    return image_filename, title, artist
+    song_info = title, artist
+    if song_info:
+        # 앨범 정보로 연결되는 링크 출력
+        search_query = title + ' ' + artist + ' 앨범 정보'
+        search_query = urllib.parse.quote(search_query)
+        url = f"https://www.google.com/search?q={search_query}"
+        header = {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
+        res = requests.get(url, headers=header).text
+        soup = BeautifulSoup(res, 'html.parser')
+        link_element = soup.find('div', {'class': 'yuRUbf'}).a
+        if link_element:
+            album_link = link_element['href']
+        else:
+            album_link = None
+
+    return image_filename, title, artist, album_link
 
 

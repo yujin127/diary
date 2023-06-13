@@ -1,0 +1,9 @@
+{% extends 'diary/base.html' %}
+
+{% block main_area %}
+<body>
+<p>일기가 작성되었습니다.</p>
+<button class="btn btn-primary"><a href="/diary/diary_detail/{{pk}}"
+                                   style="color:#9c89b8">결과 확인하러 가기!</a></button>
+</body>
+{% endblock %}
